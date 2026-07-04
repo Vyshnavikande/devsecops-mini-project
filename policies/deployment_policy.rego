@@ -1,27 +1,27 @@
 package main
 
-deny[msg] {
+deny contains msg if {
   input.kind == "Deployment"
   container := input.spec.template.spec.containers[_]
   not container.securityContext.runAsNonRoot
   msg := "Container must run as non-root user"
 }
 
-deny[msg] {
+deny contains msg if {
   input.kind == "Deployment"
   container := input.spec.template.spec.containers[_]
   container.securityContext.allowPrivilegeEscalation == true
   msg := "Privilege escalation must be disabled"
 }
 
-deny[msg] {
+deny contains msg if {
   input.kind == "Deployment"
   container := input.spec.template.spec.containers[_]
   not container.securityContext.readOnlyRootFilesystem
   msg := "Root filesystem must be read-only"
 }
 
-deny[msg] {
+deny contains msg if {
   input.kind == "Deployment"
   container := input.spec.template.spec.containers[_]
   not container.securityContext.capabilities.drop
