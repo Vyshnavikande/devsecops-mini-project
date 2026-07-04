@@ -1,0 +1,25 @@
+DevSecOps Compliance Automation Summary
+
+1. Container Vulnerability Scanning
+Tool Used: Trivy
+Purpose: Detect vulnerabilities in the Docker image and base image packages.
+
+2. Secrets Management
+Tools Used: Environment variables, Kubernetes Secrets, Gitleaks
+Purpose: Prevent hardcoded credentials and scan repository for exposed secrets.
+
+3. Least-Privilege Access
+Controls Used: Non-root user, disabled privilege escalation, dropped Linux capabilities, read-only root filesystem.
+Purpose: Reduce container runtime security risk.
+
+4. Dependency Risk Analysis
+Tool Used: pip-audit
+Purpose: Identify vulnerable Python dependencies.
+
+5. Policy as Code
+Tool Used: OPA/Conftest
+Purpose: Validate Kubernetes deployment security rules before deployment.
+
+6. Supply Chain Security
+Controls Used: Dependency scanning, secret scanning, image scanning, CI/CD security gates.
+Purpose: Reduce risk from unsafe code, images, and dependencies.

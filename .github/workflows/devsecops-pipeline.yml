@@ -1,0 +1,49 @@
+name: DevSecOps Security Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  security-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r app/requirements.txt
+          pip install pip-audit
+
+      - name: Dependency vulnerability scan
+        run: |
+          pip-audit -r app/requirements.txt
+
+      - name: Secret scanning with Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t devsecops-mini-project:${{ github.sha }} .
+
+      - name: Container vulnerability scan with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: devsecops-mini-project:${{ github.sha }}
+          severity: HIGH,CRITICAL
+          exit-code: 1
+
+      - name: Policy as Code scan
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/project openpolicyagent/conftest test /project/k8s/deployment.yaml --policy /project/policies
