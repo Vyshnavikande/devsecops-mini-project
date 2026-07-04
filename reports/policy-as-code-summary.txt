@@ -1,0 +1,17 @@
+Policy as Code Scan Summary
+
+Tool Used: OPA/Conftest
+Policy File: policies/deployment_policy.rego
+Target File: k8s/deployment.yaml
+
+Result:
+The Kubernetes deployment configuration was tested against security policies.
+
+The deployment passed the policy checks because it includes:
+1. runAsNonRoot set to true
+2. allowPrivilegeEscalation set to false
+3. readOnlyRootFilesystem set to true
+4. Linux capabilities dropped using drop: ALL
+
+Security Control Verified:
+The Kubernetes deployment follows least-privilege container security practices.
